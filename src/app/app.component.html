@@ -1,46 +1,46 @@
 <section class="form-content">
   <div class="container register-form">
-    <div class="form">
+    <div class="form" id="formHeader">
       <div class="note">
         <p>Welcome to Gradious Doctor Appointment Booking</p>
       </div>
-      <form #form >
+      <form #form="ngForm" (ngSubmit)="onSubmit(form)" >
       <div class="form-content">
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Patient Name *" value="" />
+              <input type="text"  [(ngModel)]="this.service.appointment.patientName" name="patientName" #patientName="ngModel" required class="form-control" placeholder="Patient Name *" />
             </div>
-            <div class="form-group">
-              <select class="form-control" placeholder="Select Male/Female *" value="">
+            <div class="form-group" >
+              <select class="form-control" placeholder="Select Male/Female *"  [(ngModel)]="this.service.appointment.gender" required name="gender" #gender="ngModel">
                 <option name="M">Male</option>
                 <option name="F">Female</option>
               </select>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Age *" value="" />
+              <input type="number" class="form-control" placeholder="Age *" [(ngModel)]="this.service.appointment.age" required name="age" #age="ngModel" />
             </div>
 
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Phone Number *" value="" />
+              <input type="tel" class="form-control" maxlength="14" placeholder="Phone Number *" [(ngModel)]="this.service.appointment.phone" required name="phone" #phone="ngModel" />
             </div>
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Date *" value="" />
+              <input type="date" class="form-control" placeholder="Date *" [(ngModel)]="this.service.appointment.date" required name="date" #date="ngModel" />
             </div>
 
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Time *" value="" />
+              <input type="time" class="form-control" placeholder="Time *" [(ngModel)]="this.service.appointment.time" required name="time" #time="ngModel" />
             </div>
 
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Doctor Name *" value="" />
+              <input type="text" class="form-control" placeholder="Doctor Name *" [(ngModel)]="this.service.appointment.doctorName" required name="doctorName" #doctorName="ngModel" />
             </div>
             <div class="form-group">
-              <select class="form-control" placeholder="Select Consule/Revisit *" value="">
+              <select class="form-control" placeholder="Select Consule/Revisit *" [(ngModel)]="this.service.appointment.appType" required name="appType" #appType="ngModel">
                 <option name="Consult">Consult</option>
                 <option name="Revisit">Revisit</option>
               </select>
@@ -49,7 +49,7 @@
           </div>
 
         </div>
-        <button type="submit" class="btnSubmit">Book Appointment</button>
+        <button type="submit" class="btn btnSubmit" [disabled]="form.invalid" >{{btnName}}</button>
       </div>
     </form>
     </div>
@@ -70,10 +70,11 @@
           <th>Appointment</th>
           <th>Phone</th>
           <th>Doctor</th>
-          <th>Actions</th>
+          <th>Update</th>
+          <th>Delete</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody *ngFor="let appointment of this.service.appointments">
         <tr>
           <td>
             <div class="user-info">
@@ -81,117 +82,36 @@
                 <img src="./../assets/img/prof.png" alt="User Img">
               </div>
               <div class="user-info__basic">
-                <h5 class="mb-0">John Doe</h5>
-                <p class="text-muted mb-0">28 yrs, Male</p>
+                <h5 class="mb-0">{{appointment.patientName}}</h5>
+                <p class="text-muted mb-0">{{appointment.age}} yrs, {{appointment.gender}}</p>
               </div>
             </div>
           </td>
           <td>
-            <span class="btn btn-success">Consult</span>
+            <span [ngClass]="appointment.appType=='Consult'?'btn-success':'btn-primary'" class="btn">{{appointment.appType}}</span>
           </td>
           <td>
-            <h6 class="mb-0">06:00 PM</h6>
-            <small>2 Feb 2021</small>
+            <h6 class="mb-0">{{appointment.time}}</h6>
+            <small>{{appointment.date}}</small>
           </td>
           <td>
-            <h6 class="mb-0">+91 9876543215</h6>
-            <a href="#!"><small>Contact</small></a>
+            <h6 class="mb-0">{{appointment.phone}}</h6>
+            <a><small>Contact</small></a>
           </td>
           <td>
-            <h6 class="mb-0">Dr. Ananth</h6>
+            <h6 class="mb-0">Dr. {{appointment.doctorName}}</h6>
           </td>
           <td>
-            <div class="dropdown open">
-              <a href="#!" class="px-2" id="triggerId1" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                <i class="fa fa-ellipsis-v"></i>
-              </a>
-              <div class="dropdown-menu" aria-labelledby="triggerId1">
-                <a class="dropdown-item" href="#"><i class="fa fa-pencil mr-1"></i> Edit</a>
-                <a class="dropdown-item text-danger" href="#"><i class="fa fa-trash mr-1"></i> Delete</a>
-              </div>
-            </div>
+            <a href="#formHeader" class="text-primary"  (click)="updateAppointment(this.appointment.id)"><i class="fa fa-pencil mr-1"></i> Edit</a>
+          </td>
+          <td>
+            <a  class="px-2 text-danger" (click)="deleteAppointment(this.appointment.id)">
+              <i class="fa fa-trash mr-1"> Delete</i> 
+            </a>
           </td>
         </tr>
-        <tr>
-          <td>
-            <div class="user-info">
-              <div class="user-info__img">
-                <img src="./../assets/img/prof.png" alt="User Img">
-              </div>
-              <div class="user-info__basic">
-                <h5 class="mb-0">Mukul Rao</h5>
-                <p class="text-muted mb-0">28 yrs, Male</p>
-              </div>
-            </div>
-          </td>
-          <td>
-            <span class="btn btn-primary">Revisit</span>
-          </td>
-          <td>
-            <h6 class="mb-0">06:00 PM</h6>
-            <small>2 Feb 2021</small>
-          </td>
-          <td>
-            <h6 class="mb-0">+91 9876543215</h6>
-            <a href="#!"><small>Contact</small></a>
-          </td>
-          <td>
-            <h6 class="mb-0">Dr. Ananth</h6>
-          </td>
-          <td>
-            <div class="dropdown open">
-              <a href="#!" class="px-2" id="triggerId1" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                <i class="fa fa-ellipsis-v"></i>
-              </a>
-              <div class="dropdown-menu" aria-labelledby="triggerId1">
-                <a class="dropdown-item" href="#"><i class="fa fa-pencil mr-1"></i> Edit</a>
-                <a class="dropdown-item text-danger" href="#"><i class="fa fa-trash mr-1"></i> Delete</a>
-              </div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="user-info">
-              <div class="user-info__img">
-                <img src="./../assets/img/prof.png" alt="User Img">
-              </div>
-              <div class="user-info__basic">
-                <h5 class="mb-0">Neeraj Sharma</h5>
-                <p class="text-muted mb-0">28 yrs, Male</p>
-              </div>
-            </div>
-          </td>
-          <td>
-            <span class="btn btn-success">Consult</span>
-          </td>
-          <td>
-            <h6 class="mb-0">06:00 PM</h6>
-            <small>2 Feb 2021</small>
-          </td>
-          <td>
-            <h6 class="mb-0">+91 9876543215</h6>
-            <a href="#!"><small>Contact</small></a>
-          </td>
-          <td>
-            <h6 class="mb-0">Dr. Ananth</h6>
-          </td>
-          <td>
-            <div class="dropdown open">
-              <a href="#!" class="px-2" id="triggerId1" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                <i class="fa fa-ellipsis-v"></i>
-              </a>
-              <div class="dropdown-menu" aria-labelledby="triggerId1">
-                <a class="dropdown-item" href="#"><i class="fa fa-pencil mr-1"></i> Edit</a>
-                <a class="dropdown-item text-danger" href="#"><i class="fa fa-trash mr-1"></i> Delete</a>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
+
+    </tbody>
     </table>
   </div>
 </section>

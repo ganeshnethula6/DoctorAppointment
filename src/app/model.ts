@@ -7,7 +7,7 @@ export interface Appointment {
     date: string,
     appType: string,
     age: string,
-    time: string
+    time: string,
 
 
 }
